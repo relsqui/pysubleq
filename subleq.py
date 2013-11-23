@@ -32,6 +32,7 @@ def run(program):
 
 memory = []
 program = []
+errors = []
 
 for line in fileinput.input():
     if line[0] in ["\n", "#"]:
@@ -39,10 +40,27 @@ for line in fileinput.input():
         pass
     elif not memory:
         # The first non-blank non-comment line initializes memory.
-        memory = map(int, line.split())
+        try:
+            memory = map(int, line.split())
+        except ValueError as e:
+            errors.append((fileinput.filename(), fileinput.lineno(), str(e), line))
     else:
         # The rest are sets of operands for subleq.
-        program.append(tuple(map(int, line.split())))
+        try:
+            operands = tuple(map(int, line.split()))
+            if len(operands) == 1:
+                raise ValueError("not enough operands (expected 2 or 3)")
+            elif len(operands) > 3:
+                raise ValueError("too many operands (expected 2 or 3)")
+            program.append(operands)
+        except ValueError as e:
+            errors.append((fileinput.filename(), fileinput.lineno(), str(e), line))
 
-run(program)
-print memory
+if errors:
+    error_lines = []
+    for filename, lineno, message, line in errors:
+        error_lines.append('Error: "{}" line {}: {}:\n{}'.format(filename, lineno, message, line.strip()))
+    print "\n\n".join(error_lines)
+else:
+    run(program)
+    print memory
