@@ -2,6 +2,7 @@
 
 import fileinput
 
+
 def subleq(a, b, c):
     global memory
     memory[b] -= memory[a]
@@ -9,23 +10,24 @@ def subleq(a, b, c):
         return c
     return None
 
+def normalize(instruction, pointer):
+    if len(instruction) < 3:
+        instruction = instruction + (pointer + 1,)
+    return instruction
+
+def next_address(jump, pointer):
+    if jump is not None:
+        return jump
+    return pointer + 1
+
 def run(program):
-    global memory
     pointer = 0
     while pointer >= 0 and pointer < len(program):
         instruction = program[pointer]
         print memory
         print instruction
-
-        if len(instruction) < 3:
-            instruction = instruction + (pointer + 1,)
-        a, b, c = instruction
-
-        newpointer = subleq(a, b, c)
-        if newpointer is None:
-            pointer += 1
-        else:
-            pointer = newpointer
+        a, b, c = normalize(instruction, pointer)
+        pointer = next_address(subleq(a, b, c), pointer)
 
 
 memory = []
