@@ -1,10 +1,16 @@
+# init memory
 1 1 1 1 1 1 1 1
 
+# clear the first register and jump to instruction 7
 0 0 7
+
+# all this gets skipped!
 1 1
 2 2
 3 3
 4 4
 5 5
 6 6
+
+# clear the last register
 7 7

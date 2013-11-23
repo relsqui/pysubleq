@@ -32,13 +32,14 @@ memory = []
 program = []
 
 for line in fileinput.input():
-    # The first line of the file is starting memory.
-    # The rest are sets of operands. Blank lines are ignored.
-    if line == "\n":
-        continue
-    if fileinput.isfirstline():
+    if line[0] in ["\n", "#"]:
+        # Ignore blank lines and comments.
+        pass
+    elif not memory:
+        # The first non-blank non-comment line initializes memory.
         memory = map(int, line.split())
     else:
+        # The rest are sets of operands for subleq.
         program.append(tuple(map(int, line.split())))
 
 run(program)
