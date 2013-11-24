@@ -1,6 +1,9 @@
-1 3 0
+# Copy register 0 to register 1, using register 2 as a placeholder.
+1 3 2
 
 1 1
+2 2
+
 0 2
 2 1
 2 2

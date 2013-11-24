@@ -1,0 +1,14 @@
+# Bad memory init.
+foo 2 3 4 5
+
+# Now this is memory, instead of an instruction!
+1 2
+
+# Too many operands.
+1 2 3 4
+
+# Too few.
+1
+
+# Addressing a nonexistent register.
+2 2
