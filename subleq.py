@@ -43,7 +43,7 @@ for line in fileinput.input():
         try:
             memory = map(int, line.split())
         except ValueError as e:
-            errors.append((fileinput.filename(), fileinput.lineno(), str(e), line))
+            errors.append((fileinput.filename(), fileinput.filelineno(), str(e), line))
     else:
         # The rest are sets of operands for subleq.
         try:
@@ -57,7 +57,7 @@ for line in fileinput.input():
                     raise ValueError("register {} out of range (max {})".format(operand, len(memory)-1))
             program.append(operands)
         except ValueError as e:
-            errors.append((fileinput.filename(), fileinput.lineno(), str(e), line))
+            errors.append((fileinput.filename(), fileinput.filelineno(), str(e), line))
 
 if errors:
     error_lines = []
