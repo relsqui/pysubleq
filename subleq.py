@@ -52,6 +52,9 @@ for line in fileinput.input():
                 raise ValueError("not enough operands (expected 2 or 3)")
             elif len(operands) > 3:
                 raise ValueError("too many operands (expected 2 or 3)")
+            for operand in operands[:2]:
+                if operand not in xrange(len(memory)):
+                    raise ValueError("register {} out of range (max {})".format(operand, len(memory)-1))
             program.append(operands)
         except ValueError as e:
             errors.append((fileinput.filename(), fileinput.lineno(), str(e), line))
