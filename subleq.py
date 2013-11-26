@@ -2,6 +2,7 @@
 
 import fileinput
 
+
 memory = []
 
 
@@ -33,6 +34,7 @@ def run(program):
     print memory
 
 def parse_program():
+    global memory
     program = []
     errors = []
 
