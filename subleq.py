@@ -36,7 +36,8 @@ def parse_program():
     errors = []
 
     for line in fileinput.input():
-        if line[0] in ["\n", "#"]:
+        line = line.strip()
+        if not line or (line[0] in ["#", "\n"]):
             # Ignore blank lines and comments.
             pass
         elif not memory:
