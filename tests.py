@@ -48,7 +48,12 @@ class IOTrapper(object):
             sys.stdin = real_stdin
         
 
-class SubleqTests(unittest.TestCase):
+class PSLCommon(unittest.TestCase):
+    def tearDown(self):
+        subleq.memory = []
+
+
+class SubleqTests(PSLCommon):
     def setUp(self):
         subleq.memory = [0, 1, 2, 3, 4]
 
@@ -71,7 +76,7 @@ class SubleqTests(unittest.TestCase):
         self.assertEqual(subleq.memory, [0, 1, 2, 3, 1])
 
 
-class HelperTests(unittest.TestCase):
+class HelperTests(PSLCommon):
     def test_normalize_short(self):
         old_inst = (0, 1)
         new_inst = subleq.normalize(old_inst, 0)
@@ -92,7 +97,7 @@ class HelperTests(unittest.TestCase):
         self.assertEqual(pointer, 3)
 
 
-class ParserTests(unittest.TestCase):
+class ParserTests(PSLCommon):
     def pretend_to_parse(self, program):
         fakeio = IOTrapper()
         with fakeio.set_trap():
@@ -129,6 +134,16 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(errors, [("<stdin>", 2, "invalid literal for int() with base 10: 'foo'", "foo 1 2 3")])
         self.assertEqual(program, [])
         self.assertEqual(subleq.memory, [])
+
+    def test_parse_memory_exists(self):
+        subleq.memory = [0, 0, 0]
+        program, errors = self.pretend_to_parse("""
+            1 1 1
+        """)
+        self.assertEqual(errors, [])
+        self.assertEqual(program, [(1, 1, 1)])
+        self.assertEqual(subleq.memory, [0, 0, 0])
+
 
 if __name__ == '__main__':
     unittest.main()
