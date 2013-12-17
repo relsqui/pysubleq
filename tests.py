@@ -109,19 +109,26 @@ class ParserTests(unittest.TestCase):
 
     def test_parse_working(self):
         program, errors = self.pretend_to_parse("""
-  # This is the add program. It includes comments and extra whitespace.
-2 5 3
-    
-2 2
-  0 2
- 2 1
+            # This is the add program. It has comments and extra whitespace.
+            2 5 3
+                
+            2 2
+              0 2
+             2 1
 
-2 2
-""")
+            2 2
+        """)
         self.assertEqual(errors, [])
         self.assertEqual(program, [(2, 2), (0, 2), (2, 1), (2, 2)])
         self.assertEqual(subleq.memory, [2, 5, 3])
 
+    def test_parse_noninteger(self):
+        program, errors = self.pretend_to_parse("""
+            foo 1 2 3
+        """)
+        self.assertEqual(errors, ["Error: \"<stdin>\" line 2: invalid literal for int() with base 10: 'foo':\nfoo 1 2 3"])
+        self.assertEqual(program, [])
+        self.assertEqual(subleq.memory, [])
 
 if __name__ == '__main__':
     unittest.main()
