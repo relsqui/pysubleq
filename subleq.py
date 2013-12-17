@@ -62,19 +62,17 @@ def parse_program():
                 errors.append((fileinput.filename(), fileinput.filelineno(), str(e), line))
 
     if errors:
-        error_lines = []
-        for filename, lineno, message, line in errors:
-            error_lines.append('Error: "{}" line {}: {}:\n{}'.format(filename, lineno, message, line.strip()))
-        return ([], error_lines)
+        return [], errors
     else:
-        return (program, [])
+        return program, []
 
 def main():
     program, errors = parse_program()
-    if program:
-        run(program)
+    if errors:
+        for params in errors:
+            print 'Error: "{}" line {}: {}:\n  {}'.format(*params)
     else:
-        print "\n\n".join(errors)
+        run(program)
 
 
 memory = []

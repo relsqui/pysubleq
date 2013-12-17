@@ -126,7 +126,7 @@ class ParserTests(unittest.TestCase):
         program, errors = self.pretend_to_parse("""
             foo 1 2 3
         """)
-        self.assertEqual(errors, ["Error: \"<stdin>\" line 2: invalid literal for int() with base 10: 'foo':\nfoo 1 2 3"])
+        self.assertEqual(errors, [("<stdin>", 2, "invalid literal for int() with base 10: 'foo'", "foo 1 2 3")])
         self.assertEqual(program, [])
         self.assertEqual(subleq.memory, [])
 
