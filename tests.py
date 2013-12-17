@@ -19,11 +19,6 @@ class IOTrapper(object):
         else:
             self._pending_write = string
 
-    def empty_write(self):
-        queue = self._write_queue
-        self._write_queue = []
-        return queue
-
     def readline(self):
         try:
             first_line, self._read_queue = self._read_queue.splitlines(True)
@@ -39,10 +34,6 @@ class IOTrapper(object):
     def queue_read(self, string):
         self._read_queue = string
 
-    def empty_read(self):
-        queue = self._read_queue
-        self._read_queue = ""
-        return queue
 
     @contextlib.contextmanager
     def set_trap(self):
@@ -57,7 +48,7 @@ class IOTrapper(object):
             sys.stdin = real_stdin
         
 
-class SubleqTests(unittest.TestCase):
+class SubleqTestsWithMemory(unittest.TestCase):
     def setUp(self):
         subleq.memory = [0, 1, 2, 3, 4]
 
@@ -100,6 +91,7 @@ class SubleqTests(unittest.TestCase):
         self.assertEqual(pointer, 3)
 
 
+class SubleqTestsNoMemory(unittest.TestCase):
     def test_parse_empty(self):
         fakeio = IOTrapper()
         with fakeio.set_trap():
@@ -107,6 +99,26 @@ class SubleqTests(unittest.TestCase):
             program, errors = subleq.parse_program()
         self.assertEqual(errors, [])
         self.assertEqual(program, [])
+        self.assertEqual(subleq.memory, [])
+
+
+    def test_parse_working(self):
+        fakeio = IOTrapper()
+        program_data = """
+  # This is the add program. It includes comments and extra whitespace.
+2 5 3
+    
+2 2
+  0 2
+ 2 1
+2 2
+"""
+        with fakeio.set_trap():
+            fakeio.queue_read(program_data)
+            program, errors = subleq.parse_program()
+        self.assertEqual(errors, [])
+        self.assertEqual(program, [(2, 2), (0, 2), (2, 1), (2, 2)])
+        self.assertEqual(subleq.memory, [2, 5, 3])
 
 
 if __name__ == '__main__':
