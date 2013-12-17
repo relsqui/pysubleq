@@ -48,7 +48,7 @@ class IOTrapper(object):
             sys.stdin = real_stdin
         
 
-class SubleqTestsWithMemory(unittest.TestCase):
+class SubleqTests(unittest.TestCase):
     def setUp(self):
         subleq.memory = [0, 1, 2, 3, 4]
 
@@ -71,6 +71,7 @@ class SubleqTestsWithMemory(unittest.TestCase):
         self.assertEqual(subleq.memory, [0, 1, 2, 3, 1])
 
 
+class HelperTests(unittest.TestCase):
     def test_normalize_short(self):
         old_inst = (0, 1)
         new_inst = subleq.normalize(old_inst, 0)
@@ -91,31 +92,32 @@ class SubleqTestsWithMemory(unittest.TestCase):
         self.assertEqual(pointer, 3)
 
 
-class SubleqTestsNoMemory(unittest.TestCase):
-    def test_parse_empty(self):
+class ParserTests(unittest.TestCase):
+    def pretend_to_parse(self, program):
         fakeio = IOTrapper()
         with fakeio.set_trap():
-            fakeio.queue_read("")
+            fakeio.queue_read(program)
             program, errors = subleq.parse_program()
+        return program, errors
+
+    def test_parse_empty(self):
+        program, errors = self.pretend_to_parse("")
         self.assertEqual(errors, [])
         self.assertEqual(program, [])
         self.assertEqual(subleq.memory, [])
 
 
     def test_parse_working(self):
-        fakeio = IOTrapper()
-        program_data = """
+        program, errors = self.pretend_to_parse("""
   # This is the add program. It includes comments and extra whitespace.
 2 5 3
     
 2 2
   0 2
  2 1
+
 2 2
-"""
-        with fakeio.set_trap():
-            fakeio.queue_read(program_data)
-            program, errors = subleq.parse_program()
+""")
         self.assertEqual(errors, [])
         self.assertEqual(program, [(2, 2), (0, 2), (2, 1), (2, 2)])
         self.assertEqual(subleq.memory, [2, 5, 3])
