@@ -3,9 +3,6 @@
 import fileinput
 
 
-memory = []
-
-
 def subleq(a, b, c):
     global memory
     memory[b] -= memory[a]
@@ -79,5 +76,6 @@ def main():
         print errors
 
 
+memory = []
 if __name__ == '__main__':
     main()

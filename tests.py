@@ -4,6 +4,7 @@ import unittest, sys, contextlib
 
 import subleq
 
+
 class IOTrapper(object):
     def __init__(self):
         self._read_queue = ""
@@ -106,6 +107,7 @@ class SubleqTests(unittest.TestCase):
             program, errors = subleq.parse_program()
         self.assertEqual(errors, [])
         self.assertEqual(program, [])
+
 
 if __name__ == '__main__':
     unittest.main()

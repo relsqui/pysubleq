@@ -2,13 +2,13 @@ pysubleq
 --------
 is an emulator for a processor that only implements one instruction.
 
-subleq
-------
+### subleq ###
 The one instruction is subleq: "subtract, and branch if less than or equal to zero." Its operands are three memory addresses (a, b, c). For each instruction, subleq subtracts the value at address a from the value at address b, and stores the result at address b. If that result is negative, execution jumps to address c; otherwise it proceeds to the next instruction. If c is omitted, execution always proceeds to the next instruction.
 
-programs
---------
-pysubleq programs have separate data and instruction memory. The first line in a program file may have any amount of integers in it, separated by spaces, and is used to initialize the data registers. All following lines are taken as sets of operands to the subleq operator. Blank lines and lines starting with # are ignored. Example:
+### writing and running programs ###
+pysubleq programs have separate data and instruction memory; the data registers are numbered from zero, and the instruction registers are numbered from zero *in triplets* (that is, by line, rather than by operand).
+
+The first line in a program file may have any amount of integers in it, separated by spaces; this initializes the data registers. All following lines are taken as sets of operands to the subleq operator. Blank lines and lines starting with # are ignored. Example:
 
 
 ```
